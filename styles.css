@@ -746,37 +746,151 @@ img, svg, video, iframe {
     transition-duration: .01ms !important;
   }
 }
-@media (max-width: 480px) {
+/* Fix mobile header overlap */
+@media screen and (max-width: 480px) {
   header,
-  .header,
-  .navbar {
-    height: auto;
-    min-height: 0;
+  .header {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 12px !important;
+    overflow: visible !important;
   }
 
   .header,
-  .navbar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 10px;
-  }
-
-  .header a,
-  .navbar a {
-    max-width: 100%;
+  header .container {
+    flex-wrap: wrap !important;
   }
 
   .header .contact,
-  .navbar .contact,
-  .header .contact-links {
+  header .contact,
+  .contact-info,
+  .header-contact {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 10px 0 0 !important;
+    text-align: center !important;
+  }
+
+  .header a,
+  header a {
+    white-space: normal !important;
+  }
+}
+
+
+/* ---------- Mobile header fix: use the actual BookMyTeachers selectors ---------- */
+@media (max-width: 520px) {
+  .site-header .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 12px;
+    min-height: 0;
+    padding-block: 10px;
+  }
+
+  .site-header .logo {
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+
+  .site-header .back-link {
+    flex: 1 1 120px;
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .site-header .nav-actions {
+    flex: 1 0 100%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px 14px;
-    width: 100%;
+    gap: 10px 14px;
+    min-width: 0;
+  }
+
+  .site-header .nav-actions .button {
+    max-width: 100%;
+    white-space: normal;
     text-align: center;
+  }
+
+  .site-header .nav-actions .call-link {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-header .nav {
+    justify-content: center;
+  }
+
+  .site-header .logo {
+    flex: 0 1 auto;
+  }
+
+  .site-header .back-link {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .site-header .nav-actions {
+    gap: 8px;
+  }
+}
+
+
+/* ---------- Footer contact links: prevent phone/WhatsApp overlap ---------- */
+@media (max-width: 640px) {
+  .site-footer .footer-contact {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin: 8px 0 0;
+  }
+
+  .site-footer .footer-contact a.call-link {
+    display: inline-flex;
+    width: auto;
+    height: auto;
+    min-height: 40px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 0;
+    border: 0;
+    border-radius: 0;
+    white-space: normal;
+    text-align: left;
+    position: static;
+  }
+
+  .site-footer .footer-contact a.call-link svg {
+    position: static;
+    display: block;
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .site-footer .footer-contact a:not(.call-link) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    white-space: normal;
   }
 }
