@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141e38">
+  <link rel="icon" href="logo.png" type="image/png">
+  <meta name="description"
+        content="Share your Mumbai tuition requirements by area, class and subject.">
+  <title>Teacher Enquiry | BookMyTeachers Mumbai</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="logo" href="index.html"><img src="logo.png" width="208" height="105" alt="BookMyTeachers - home"></a>
+      <div class="nav-actions"><a class="call-link" href="tel:+918108144644" aria-label="Call 81081 44644"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span>81081 44644</span></a><a id="back-link" class="back-link" href="index.html">Change area / Home</a></div>
+    </div>
+  </header>
+
+  <main id="main" class="container section">
+    <p class="eyebrow">YOUR TUITION REQUIREMENTS</p>
+    <h1 class="page-title">Find a teacher for your learning goals</h1>
+    <p id="selected-area-text" class="muted">
+      Select your area and complete the form below.
+    </p>
+
+    <div class="progress" aria-hidden="true"><div id="progress-bar"></div></div>
+    <p id="progress-text" class="small muted" role="status" aria-live="polite">0 of 9 required steps done</p>
+
+    <div class="enquiry-layout">
+      <aside class="panel sidebar" aria-labelledby="next-heading">
+        <h2 id="next-heading">How this works</h2>
+        <ol class="steps">
+          <li>Confirm your Mumbai locality.</li>
+          <li>Select the class, board, and subjects.</li>
+          <li>Add your contact and learning preferences.</li>
+        </ol>
+       
+        <h3 class="summary-title">Your request</h3>
+        <dl id="summary" class="summary"></dl>
+        <p class="small muted">
+          If you are a student under 18, ask a parent or guardian to complete
+          the contact details.
+        </p>
+      </aside>
+
+      <form id="enquiry-form" class="panel" aria-labelledby="form-heading">
+        <h2 id="form-heading">Teacher enquiry form</h2>
+        <p class="small muted">Fields marked * are required.</p>
+
+        <fieldset>
+          <legend>Location</legend>
+          <div class="form-grid">
+            <div>
+              <label for="enquiry-zone">Mumbai zone *</label>
+              <select id="enquiry-zone" name="zone" required>
+                <option value="">Choose a zone</option>
+              </select>
+            </div>
+            <div>
+              <label for="enquiry-area">Area *</label>
+              <select id="enquiry-area" name="area" required>
+                <option value="">Choose an area</option>
+              </select>
+            </div>
+          </div>
+          <label for="landmark">Nearby landmark or sub-locality</label>
+          <input id="landmark" name="landmark" type="text" maxlength="120"
+                 placeholder="Optional - do not enter your full home address">
+        </fieldset>
+
+        <fieldset>
+          <legend>Learning requirements</legend>
+          <div class="form-grid">
+            <div>
+              <label for="student-class">Class *</label>
+              <select id="student-class" name="studentClass" required>
+                <option value="">Choose a class</option>
+              </select>
+            </div>
+            <div>
+              <label for="board">Board / curriculum *</label>
+              <select id="board" name="board" required>
+                <option value="">Choose a board</option>
+                <option>Maharashtra State Board</option>
+                <option>CBSE</option>
+                <option>ICSE / ISC</option>
+                <option>Cambridge / IGCSE</option>
+                <option>IB</option>
+                <option>Other / Not sure</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset id="subject-group" class="subject-fieldset"
+                    aria-describedby="subjects-hint subjects-error">
+            <legend>Subjects *</legend>
+            <p id="subjects-hint" class="small muted">
+              Choose a class first, then select one or more subjects.
+            </p>
+            <div id="subject-options" class="subject-options"></div>
+            <p id="subjects-error" class="error" role="alert"></p>
+          </fieldset>
+
+          <div class="form-grid">
+            <div>
+              <label for="mode">Learning mode *</label>
+              <select id="mode" name="mode" required>
+                <option value="">Choose a mode</option>
+                <option>Home tuition</option>
+                <option>Online</option>
+                <option>Either home or online</option>
+              </select>
+            </div>
+            <div>
+              <label for="frequency">Preferred frequency</label>
+              <select id="frequency" name="frequency">
+                <option value="">Not decided</option>
+                <option>2 days per week</option>
+                <option>3 days per week</option>
+                <option>5 days per week</option>
+                <option>Weekends</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="notes">Anything else we should know?</label>
+          <textarea id="notes" name="notes" rows="4" maxlength="1000"
+                    placeholder="Learning goals, preferred timings, or other requirements"></textarea>
+          <p id="notes-count" class="small muted counter">0 / 1000</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Parent / adult contact details</legend>
+          <label for="contact-name">Contact name *</label>
+          <input id="contact-name" name="contactName" type="text"
+                 autocomplete="name" placeholder="e.g.:-Varun Sharma" minlength="2" maxlength="80" required>
+
+          <div class="form-grid">
+            <div>
+              <label for="phone">Mobile number *</label>
+              <input id="phone" name="phone" type="tel" inputmode="numeric"
+                     autocomplete="tel-national" placeholder="e.g.:-9876543210" pattern="[0-9][0-9]{9}"
+                     minlength="10" maxlength="10" required
+                     aria-describedby="phone-hint"
+                     title="Enter 10 digits, for example 9876543210">
+              <p id="phone-hint" class="small muted">
+                Indian mobile format: 10 digits, without +91.
+              </p>
+            </div>
+            <div>
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email"
+                     autocomplete="email" placeholder="e.g.:-varun@gmail.com" maxlength="150">
+            </div>
+          </div>
+          <label class="check-row" for="consent">
+            <input id="consent" name="consent" type="checkbox" required>
+            <span>
+              I am an adult or parent/guardian and agree to be contacted about
+              this enquiry. *
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button id="submit-enquiry" class="button full-width"
+                type="submit" disabled>Send my enquiry</button>
+        
+        <div id="form-feedback" class="notice success" role="status"
+             tabindex="-1" hidden></div>
+      </form>
+    </div>
+  </main>
+
+  <noscript>
+    <p class="notice container">Enable JavaScript to complete this form.</p>
+  </noscript>
+  <footer class="site-footer">
+    <div class="container footer-row"><img class="footer-logo" src="logo.png" width="80" height="40" alt="BookMyTeachers"><span>Mumbai tuition enquiries</span><div class="footer-contact"><a href="tel:+918108144644">Call 81081 44644</a><a href="https://wa.me/918108144644" target="_blank" rel="noopener">WhatsApp us</a></div></div>
+  </footer>
+</body>
+</html>
