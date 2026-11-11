@@ -457,7 +457,6 @@ function initHomeExtras(zoneSelect, areaSelect, searchInput) {
 
 function initEnquiryExtras(form) {
   const phone = byId("phone");
-  const notes = byId("notes");
   const bar = byId("progress-bar");
   const text = byId("progress-text");
   const summary = byId("summary");
@@ -472,7 +471,7 @@ function initEnquiryExtras(form) {
     byId("student-class").value = d.studentClass;
     byId("student-class").dispatchEvent(new Event("change", { bubbles: true }));
   }
-  ["board", "mode", "frequency"].forEach(id => { if (d[id]) byId(id).value = d[id]; });
+  if (d.board) byId("board").value = d.board;
   (d.subjects || []).forEach(s => {
     const box = [...form.querySelectorAll("[name=subjects]")].find(i => i.value === s);
     if (box) box.checked = true;
@@ -481,10 +480,8 @@ function initEnquiryExtras(form) {
     try {
       sessionStorage.setItem(KEY, JSON.stringify({
         studentClass: byId("student-class").value,
-        board: byId("board").value,
-        mode: byId("mode").value,
-        frequency: byId("frequency").value,
-        subjects: [...form.querySelectorAll("[name=subjects]:checked")].map(i => i.value)
+board: byId("board").value,
+subjects: [...form.querySelectorAll("[name=subjects]:checked")].map(i => i.value)
       }));
       if (byId("enquiry-area").value) {
         localStorage.setItem("bmt:lastArea", byId("enquiry-area").value);
@@ -492,20 +489,23 @@ function initEnquiryExtras(form) {
     } catch { /* storage unavailable */ }
   }
 
-  const steps = () => [
-    byId("enquiry-zone").value, byId("enquiry-area").value,
-    byId("student-class").value, byId("board").value,
-    form.querySelector("[name=subjects]:checked"), byId("mode").value,
-    byId("contact-name").value.trim().length >= 2,
-    /^[0-9]{10}$/.test(phone.value), byId("consent").checked
-  ];
+ const steps = () => [
+  byId("enquiry-zone").value,
+  byId("enquiry-area").value,
+  byId("student-class").value,
+  byId("board").value,
+  form.querySelector("[name=subjects]:checked"),
+  byId("contact-name").value.trim().length >= 2,
+  /^[0-9]{10}$/.test(phone.value),
+  byId("consent").checked
+];
 
   function refresh() {
     const done = steps().filter(Boolean).length;
-    bar.style.width = `${(done / 9) * 100}%`;
-    text.textContent = done === 9
-      ? "All required details are filled in. You can send your enquiry."
-      : `${done} of 9 required steps done`;
+    bar.style.width = `${(done / 8) * 100}%`;
+    text.textContent = done === 8
+  ? "All required details are filled in. You can send your enquiry."
+  : `${done} of 8 required steps done`;
 
     const subjects = [...form.querySelectorAll("[name=subjects]:checked")]
       .map(i => i.value).join(", ");
@@ -513,9 +513,7 @@ function initEnquiryExtras(form) {
       ["Area", byId("enquiry-area").value],
       ["Class", byId("student-class").value && `Class ${byId("student-class").value}`],
       ["Board", byId("board").value],
-      ["Subjects", subjects],
-      ["Mode", byId("mode").value],
-      ["Frequency", byId("frequency").value]
+      ["Subjects", subjects]
     ].filter(([, v]) => v);
     summary.replaceChildren();
     if (!rows.length) {
@@ -531,7 +529,7 @@ function initEnquiryExtras(form) {
       dd.textContent = v;
       summary.append(dt, dd);
     });
-    byId("notes-count").textContent = `${notes.value.length} / 1000`;
+    
   }
 
   // Keep only digits and drop a pasted +91 or leading 0.
@@ -548,5 +546,3 @@ function initEnquiryExtras(form) {
   form.addEventListener("change", () => { refresh(); saveDraft(); });
   refresh();
 }
-
-
