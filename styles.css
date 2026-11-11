@@ -1,16 +1,4 @@
-/* =========================================================
-   BookMyTeachers: stylesheet v2
-   Same class names as before, so your HTML works unchanged.
 
-   Structure: everything lives in cascade layers. Any rule you
-   write OUTSIDE a layer (a page <style>, a later file) beats
-   everything here without !important or specificity tricks.
-
-   Optional display font, add to <head>:
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
-   ========================================================= */
 
 @layer reset, tokens, base, layout, components, motion, responsive, a11y, print;
 
@@ -749,4 +737,46 @@
   @view-transition { navigation: auto; }
   .site-header { view-transition-name: site-header; }   /* header stays put between pages */
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .25s; }
+}
+/* Mobile-adaptive homepage backgrounds */
+@media (max-width: 640px) {
+  /* Scale the page pattern for smaller screens */
+  body::before {
+    background-size: 130px 130px;
+  }
+
+  /* Keep the hero artwork fitted to mobile width */
+  .hero {
+    background-image:
+      radial-gradient(circle at 90% 5%, #f0441030, transparent 48%),
+      url("hero-bg.svg");
+    background-position: center, center bottom;
+    background-size: 100% 100%, 100% auto;
+    background-repeat: no-repeat, no-repeat;
+    background-color: var(--navy);
+  }
+
+  .hero-layout {
+    padding-block: 36px 48px;
+  }
+
+  /* Make the area-section pattern more compact */
+  .band-areas {
+    background-size: 130px 130px, 100% 100%;
+  }
+}
+
+/* Extra-small phones */
+@media (max-width: 380px) {
+  .hero-layout {
+    padding-block: 28px 38px;
+  }
+
+  body::before {
+    background-size: 115px 115px;
+  }
+
+  .band-areas {
+    background-size: 115px 115px, 100% 100%;
+  }
 }
