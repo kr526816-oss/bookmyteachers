@@ -823,3 +823,13 @@ img, svg, video, iframe {
     white-space: normal;
   }
 }
+.whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.whatsapp-link svg {
+  color: #25D366;
+  flex-shrink: 0;
+}
