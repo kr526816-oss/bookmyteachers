@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bookmyteachers.vercel.app/sitemap.xml
