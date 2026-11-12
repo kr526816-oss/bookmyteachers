@@ -4,7 +4,15 @@
 const ENQUIRY_ENDPOINT = "https://formsubmit.co/ajax/newhelpline.it@gmail.com";
 const ENQUIRY_EXTRA_FIELDS = { _template: "table", _captcha: "false" };
 const REQUEST_TIMEOUT_MS = 15000;
+const SUPABASE_URL = "https://vcauqbdmfqyzvtaeebrh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_D6wZ3mMM98wa_02cmLNK3Q_kM8r9MYO";
 
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    )
+  : null;
 // Editable browsing groups, not official administrative zones.
 const MUMBAI_AREAS = {
   "Western Suburbs": [
@@ -314,26 +322,73 @@ function initEnquiry() {
   }
 
   async function sendEnquiry(payload) {
-    if (!ENQUIRY_ENDPOINT) throw new Error("not-configured");
+  if (!supabaseClient) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  // 1. Save enquiry in Supabase
+  const { error } = await supabaseClient
+    .from("enquiries")
+    .insert({
+      zone: payload.zone,
+      area: payload.area,
+      student_class: String(payload.studentClass),
+      board: payload.board,
+      subjects: payload.subjects,
+      contact_name: payload.contactName,
+      phone: payload.phone,
+      email: payload.email || null,
+      consent: payload.consent,
+      submitted_at: payload.submittedAt
+    });
+
+  if (error) {
+    console.error("Supabase save failed:", error);
+    throw new Error(`Database save failed: ${error.message}`);
+  }
+
+  // 2. Send email notification through FormSubmit
+  let emailSent = false;
+
+  try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    const timer = setTimeout(
+      () => controller.abort(),
+      REQUEST_TIMEOUT_MS
+    );
+
     try {
       const response = await fetch(ENQUIRY_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(payload),
         signal: controller.signal
       });
-      if (!response.ok) throw new Error(`http-${response.status}`);
-      // FormSubmit answers 200 with success:"false" (e.g. email not yet activated).
+
       const result = await response.json().catch(() => ({}));
-      if (result.success === false || result.success === "false") {
-        throw new Error(result.message || "rejected");
+
+      if (
+        !response.ok ||
+        result.success === false ||
+        result.success === "false"
+      ) {
+        throw new Error(result.message || `HTTP ${response.status}`);
       }
+
+      emailSent = true;
     } finally {
       clearTimeout(timer);
     }
+  } catch (emailError) {
+    console.error("Email notification failed:", emailError);
   }
+
+  return { emailSent };
+}
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
@@ -374,16 +429,25 @@ function initEnquiry() {
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending...";
     try {
-      await sendEnquiry(payload);
-      resetEnquiryForm();
-      showFeedback(true, thanks);
+      const result = await sendEnquiry(payload);
+
+resetEnquiryForm();
+
+showFeedback(
+  true,
+  result.emailSent
+    ? thanks
+    : `${thanks} Your enquiry is saved, but the email notification could not be sent.`
+);
     } catch (error) {
       console.error("Enquiry failed:", error);
       const message = error.message === "not-configured"
-        ? "Enquiries can't be sent right now. Please try again later."
-        : error.name === "AbortError"
-          ? "The request took too long. Check your connection and try again."
-          : "We couldn't send your enquiry. Check your connection and try again. Your details are still filled in.";
+  ? "Enquiries can't be sent right now. Please try again later."
+  : error.name === "AbortError"
+    ? "The request took too long. Check your connection and try again."
+    : error.message === "Failed to fetch"
+      ? "Unable to connect to the enquiry service. Please try again."
+      : `Enquiry service error: ${error.message}. Your details are still filled in.`;
       showFeedback(false, message);
     } finally {
       sending = false;
